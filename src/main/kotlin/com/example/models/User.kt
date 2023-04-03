@@ -11,7 +11,7 @@ data class User(
     val telephone: String,
 )
 
-data class UserNoId(
+data class UserInfo(
     val username: String,
     val password: String,
     val firstName: String,

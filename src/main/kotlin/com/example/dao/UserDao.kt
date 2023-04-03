@@ -2,7 +2,7 @@ package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
 import com.example.models.User
-import com.example.models.UserNoId
+import com.example.models.UserInfo
 import com.example.models.Users
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
@@ -31,7 +31,7 @@ class UserDao {
             .singleOrNull()
     }
 
-    suspend fun getId(username: String): Int? = dbQuery {
+    suspend fun getIdByUsername(username: String): Int? = dbQuery {
         Users
             .select { Users.username eq username }
             .map(::fromResultRow)
@@ -48,7 +48,7 @@ class UserDao {
     }
 
     suspend fun add(
-        userNoId: UserNoId
+        userNoId: UserInfo
     ): User? = dbQuery {
         val insertStatement = Users.insert {
             it[username] = userNoId.username
@@ -61,7 +61,7 @@ class UserDao {
     }
 
     suspend fun edit(
-        userNoId: UserNoId
+        userNoId: UserInfo
     ): Boolean = dbQuery {
         Users.update({ Users.username eq userNoId.username }) {
             it[username] = userNoId.username
@@ -81,7 +81,7 @@ val userDao: UserDao = UserDao().apply {
     runBlocking {
         if (getAll().isEmpty()) {
             add(
-                UserNoId(
+                UserInfo(
                     "0Pinky0",
                     "005135",
                     "佳乐",

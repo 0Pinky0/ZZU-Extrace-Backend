@@ -1,25 +1,27 @@
 package com.example.models
 
-import org.jetbrains.exposed.sql.ForeignKeyConstraint
 import org.jetbrains.exposed.sql.Table
 
 data class Package(
     val id: Int,
-    val name: String,
-    val password: String,
-    val telephone: String,
+    val content: String,
+    val startId: Int,
+    val endId: Int,
+)
+
+data class PackageInfo(
+    val content: String,
+    val startId: Int,
+    val endId: Int,
 )
 
 object Packages : Table() {
-    // 用户标识符
+    // 包裹
     val id = integer("id").autoIncrement()
     val content = varchar("content", 64)
-    val senderId = integer("sender_id").references(Users.id)
-    val receiverId = integer("receiver_id").references(Users.id)
 
-
-
-    val expressId = integer("express_id").references(Expresses.id)
+    val startId = integer("ori_node_id").references(TransitNodes.id)
+    val endId = integer("dst_node_id").references(TransitNodes.id)
 
     override val primaryKey = PrimaryKey(id)
 }

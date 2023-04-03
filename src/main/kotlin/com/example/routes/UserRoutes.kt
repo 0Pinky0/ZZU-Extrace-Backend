@@ -1,14 +1,12 @@
 package com.example.routes
 
 import com.example.dao.userDao
-import com.example.models.UserNoId
-import io.ktor.http.*
+import com.example.models.UserInfo
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-
 
 fun Route.userRouting() {
     route("user") {
@@ -29,12 +27,9 @@ private fun Route.getAllUsers() {
 
 private fun Route.addUser() {
     post("add") {
-        val user = call.receive<UserNoId>()
-        call.respond(user)
-        val result = userDao.add(
-            user
-        )
-//        call.respondRedirect("get/${user?.username}")
+        val user = call.receive<UserInfo>()
+        val item = userDao.add(user)
+        call.respond(mapOf("OK" to (item == null)))
     }
 }
 
@@ -42,23 +37,14 @@ private fun Route.getUser() {
     get("get/{username}") {
         val username = call.parameters.getOrFail<String>("username")
         val item = userDao.get(username)
-        if (item == null)
-            call.respond(HttpStatusCode.NotFound)
-        else
-            call.respond(item)
+        call.respond(mapOf("OK" to (item == null)))
     }
 }
 
 private fun Route.editUser() {
     post("edit") {
-        val user = call.receive<UserNoId>()
-        call.respond(
-            mapOf(
-                "OK" to userDao.edit(
-                    user
-                )
-            )
-        )
+        val user = call.receive<UserInfo>()
+        call.respond(mapOf("OK" to userDao.edit(user)))
     }
 }
 

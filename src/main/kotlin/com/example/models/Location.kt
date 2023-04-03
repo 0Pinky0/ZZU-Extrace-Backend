@@ -1,14 +1,15 @@
 package com.example.models
 
+import com.example.models.TransitNodes.autoIncrement
 import org.jetbrains.exposed.sql.Table
 
-data class TransitNode(
+data class Location(
     val id: Int,
     val name: String,
 )
 
-object TransitNodes : Table() {
-    // 转运节点
+object Locations : Table() {
+    // 快件
     val id = integer("id").autoIncrement()
     val name = varchar("name", 64)
 
