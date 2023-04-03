@@ -1,9 +1,9 @@
-val ktor_version: String by project
 val kotlin_version: String by project
+val ktor_version: String by project
 val exposed_version: String by project
-val h2_version: String by project
+val mysql_version: String by project
 val logback_version: String by project
-val jackson_version = "2.9.8"
+val jackson_version: String by project
 
 plugins {
     kotlin("jvm") version "1.8.10"
@@ -27,7 +27,6 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-freemarker:$ktor_version")
 
     implementation("io.ktor:ktor-server-compression:$ktor_version")
     implementation("io.ktor:ktor-server-call-logging:$ktor_version")
@@ -39,7 +38,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    implementation("com.h2database:h2:$h2_version")
+    implementation("mysql:mysql-connector-java:$mysql_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")

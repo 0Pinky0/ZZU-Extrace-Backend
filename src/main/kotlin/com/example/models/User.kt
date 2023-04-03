@@ -1,13 +1,37 @@
 package com.example.models
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 
-data class User(val uid: Int, val name: String, val password: String)
+data class User(
+    val id: Int,
+    val username: String,
+    val password: String,
+    val firstName: String,
+    val lastName: String,
+    val telephone: String,
+)
+
+data class UserNoId(
+    val username: String,
+    val password: String,
+    val firstName: String,
+    val lastName: String,
+    val telephone: String,
+)
 
 object Users : Table() {
-    val uid = integer("uid").autoIncrement()
-    val name = varchar("name", 128)
-    val password = varchar("password", 1024)
+    val id = integer("id").autoIncrement()
+    // 用户名，登录用
+    val username = varchar("username", 32).uniqueIndex()
+    // TODO: 换成哈希后的密码值
+    // 登录密码
+    val password = varchar("password", 32)
+    // 用户名
+    val firstName = varchar("first_name", 32)
+    // 用户姓
+    val lastName = varchar("last_name", 32)
+    // 电话号码
+    val telephone = varchar("telephone", 16)
 
-    override val primaryKey = PrimaryKey(uid)
+    override val primaryKey = PrimaryKey(id)
 }

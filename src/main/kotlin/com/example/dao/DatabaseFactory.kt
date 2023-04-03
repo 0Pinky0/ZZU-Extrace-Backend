@@ -8,11 +8,14 @@ import org.jetbrains.exposed.sql.transactions.experimental.*
 
 object DatabaseFactory {
     fun init() {
-        val driverClassName = "org.h2.Driver"
-        val jdbcURL = "jdbc:h2:file:./build/db"
-        val database = Database.connect(jdbcURL, driverClassName)
+        val driverClassName = "com.mysql.cj.jdbc.Driver"
+        val jdbcURL = "jdbc:mysql://110.41.165.169:3306/ExTrace"
+        val user = "root"
+        val password = "!23wygcxhwjL"
+        val database = Database.connect(jdbcURL, driverClassName, user, password)
         transaction(database) {
-            SchemaUtils.create(Articles)
+            SchemaUtils.create(Users)
+//            SchemaUtils.create(Packages)
         }
     }
 
