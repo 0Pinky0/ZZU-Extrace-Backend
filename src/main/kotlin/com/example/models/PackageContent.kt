@@ -7,9 +7,9 @@ data class PackageContent(
     val expressId: Int,
 )
 
-object PackageContents : Table() {
-    val packageId = integer("package_id").references(Packages.id)
-    val expressId = integer("express_id").references(Expresses.id)
+object PackageContentTable : Table() {
+    val packageId = integer("package_id").references(PackageTable.id)
+    val expressId = integer("express_id").references(ExpressTable.id)
 
     override val primaryKey = PrimaryKey(expressId, packageId)
 }

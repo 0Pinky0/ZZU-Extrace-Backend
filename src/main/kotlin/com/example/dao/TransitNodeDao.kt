@@ -2,33 +2,33 @@ package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
 import com.example.models.TransitNode
-import com.example.models.TransitNodes
+import com.example.models.TransitNodeTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class TransitNodeDao {
     private fun fromResultRow(row: ResultRow) = TransitNode(
-        id = row[TransitNodes.id],
-        name = row[TransitNodes.name],
+        id = row[TransitNodeTable.id],
+        name = row[TransitNodeTable.name],
     )
 
     suspend fun getAll(): List<TransitNode> = dbQuery {
-        TransitNodes
+        TransitNodeTable
             .selectAll()
             .map(::fromResultRow)
     }
 
     suspend fun get(id: Int): TransitNode? = dbQuery {
-        TransitNodes
-            .select { TransitNodes.id eq id }
+        TransitNodeTable
+            .select { TransitNodeTable.id eq id }
             .map(::fromResultRow)
             .singleOrNull()
     }
 
     suspend fun getIdByName(name: String): Int? = dbQuery {
-        TransitNodes
-            .select { TransitNodes.name eq name }
+        TransitNodeTable
+            .select { TransitNodeTable.name eq name }
             .map(::fromResultRow)
             .singleOrNull()
             ?.id
@@ -37,8 +37,8 @@ class TransitNodeDao {
     suspend fun add(
         name: String
     ): TransitNode? = dbQuery {
-        val insertStatement = TransitNodes.insert {
-            it[TransitNodes.name] = name
+        val insertStatement = TransitNodeTable.insert {
+            it[TransitNodeTable.name] = name
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
@@ -46,13 +46,13 @@ class TransitNodeDao {
     suspend fun edit(
         node: TransitNode
     ): Boolean = dbQuery {
-        TransitNodes.update({ TransitNodes.id eq node.id }) {
+        TransitNodeTable.update({ TransitNodeTable.id eq node.id }) {
             it[name] = node.name
         } > 0
     }
 
     suspend fun delete(id: Int): Boolean = dbQuery {
-        TransitNodes.deleteWhere { TransitNodes.id eq id } > 0
+        TransitNodeTable.deleteWhere { TransitNodeTable.id eq id } > 0
     }
 }
 

@@ -1,7 +1,8 @@
 package com.example.routes
 
 import com.example.dao.userDao
-import com.example.models.UserInfo
+import com.example.models.User
+import com.example.models.UserBody
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -27,9 +28,9 @@ private fun Route.getAllUsers() {
 
 private fun Route.addUser() {
     post("add") {
-        val user = call.receive<UserInfo>()
+        val user = call.receive<UserBody>()
         val item = userDao.add(user)
-        call.respond(mapOf("OK" to (item == null)))
+        call.respond(mapOf("OK" to (item != null)))
     }
 }
 
@@ -37,13 +38,23 @@ private fun Route.getUser() {
     get("get/{username}") {
         val username = call.parameters.getOrFail<String>("username")
         val item = userDao.get(username)
-        call.respond(mapOf("OK" to (item == null)))
+        if (item != null)
+            call.respond(item)
+        else
+            call.respond(User(
+                -1,
+                "",
+                "",
+                "",
+                "",
+                "",
+            ))
     }
 }
 
 private fun Route.editUser() {
     post("edit") {
-        val user = call.receive<UserInfo>()
+        val user = call.receive<UserBody>()
         call.respond(mapOf("OK" to userDao.edit(user)))
     }
 }
@@ -56,7 +67,7 @@ private fun Route.deleteUser() {
 }
 
 private fun Route.login() {
-    get("login/{username}/{password}") {
+    post("login/{username}/{password}") {
         val username = call.parameters.getOrFail<String>("username")
         val password = call.parameters.getOrFail<String>("password")
         call.respond(mapOf("OK" to userDao.login(username, password)))

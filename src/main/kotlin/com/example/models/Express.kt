@@ -9,19 +9,19 @@ data class Express(
     val receiverId: Int,
 )
 
-data class ExpressInfo(
+data class ExpressBody(
     val content: String,
     val senderId: Int,
     val receiverId: Int,
 )
 
-object Expresses : Table() {
+object ExpressTable : Table() {
     // 快件
     val id = integer("id").autoIncrement()
     val content = varchar("content", 128)
 
-    val senderId = integer("sender_id").references(Users.id)
-    val receiverId = integer("receiver_id").references(Users.id)
+    val senderId = integer("sender_id").references(UserTable.id)
+    val receiverId = integer("receiver_id").references(UserTable.id)
 
     override val primaryKey = PrimaryKey(id)
 }

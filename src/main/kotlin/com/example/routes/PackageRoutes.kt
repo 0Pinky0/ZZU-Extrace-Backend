@@ -2,7 +2,7 @@ package com.example.routes
 
 import com.example.dao.packageDao
 import com.example.models.Package
-import com.example.models.PackageInfo
+import com.example.models.PackageBody
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -28,7 +28,7 @@ private fun Route.getAllPackages() {
 
 private fun Route.addPackage() {
     post("add") {
-        val info = call.receive<PackageInfo>()
+        val info = call.receive<PackageBody>()
         val item = packageDao.add(info)
         call.respond(mapOf("OK" to (item == null)))
     }

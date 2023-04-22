@@ -2,33 +2,33 @@ package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
 import com.example.models.Location
-import com.example.models.Locations
+import com.example.models.LocationTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class LocationDao {
     private fun fromResultRow(row: ResultRow) = Location(
-        id = row[Locations.id],
-        name = row[Locations.name],
+        id = row[LocationTable.id],
+        name = row[LocationTable.name],
     )
 
     suspend fun getAll(): List<Location> = dbQuery {
-        Locations
+        LocationTable
             .selectAll()
             .map(::fromResultRow)
     }
 
     suspend fun get(id: Int): Location? = dbQuery {
-        Locations
-            .select { Locations.id eq id }
+        LocationTable
+            .select { LocationTable.id eq id }
             .map(::fromResultRow)
             .singleOrNull()
     }
 
     suspend fun getIdByName(name: String): Int? = dbQuery {
-        Locations
-            .select { Locations.name eq name }
+        LocationTable
+            .select { LocationTable.name eq name }
             .map(::fromResultRow)
             .singleOrNull()
             ?.id
@@ -37,8 +37,8 @@ class LocationDao {
     suspend fun add(
         name: String
     ): Location? = dbQuery {
-        val insertStatement = Locations.insert {
-            it[Locations.name] = name
+        val insertStatement = LocationTable.insert {
+            it[LocationTable.name] = name
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
@@ -46,13 +46,13 @@ class LocationDao {
     suspend fun edit(
         node: Location
     ): Boolean = dbQuery {
-        Locations.update({ Locations.id eq node.id }) {
+        LocationTable.update({ LocationTable.id eq node.id }) {
             it[name] = node.name
         } > 0
     }
 
     suspend fun delete(id: Int): Boolean = dbQuery {
-        Locations.deleteWhere { Locations.id eq id } > 0
+        LocationTable.deleteWhere { LocationTable.id eq id } > 0
     }
 }
 

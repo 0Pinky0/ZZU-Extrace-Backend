@@ -2,78 +2,81 @@ package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
 import com.example.models.User
-import com.example.models.UserInfo
-import com.example.models.Users
+import com.example.models.UserBody
+import com.example.models.UserTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class UserDao {
     private fun fromResultRow(row: ResultRow) = User(
-        id = row[Users.id],
-        username = row[Users.username],
-        password = row[Users.password],
-        firstName = row[Users.firstName],
-        lastName = row[Users.lastName],
-        telephone = row[Users.telephone],
+        id = row[UserTable.id],
+        username = row[UserTable.username],
+        password = row[UserTable.password],
+        firstName = row[UserTable.firstName],
+        lastName = row[UserTable.lastName],
+        telephone = row[UserTable.telephone],
     )
 
     suspend fun getAll(): List<User> = dbQuery {
-        Users
+        UserTable
             .selectAll()
             .map(::fromResultRow)
     }
 
     suspend fun get(username: String): User? = dbQuery {
-        Users
-            .select { Users.username eq username }
+        UserTable
+            .select { UserTable.username eq username }
             .map(::fromResultRow)
             .singleOrNull()
-    }
-
-    suspend fun getIdByUsername(username: String): Int? = dbQuery {
-        Users
-            .select { Users.username eq username }
-            .map(::fromResultRow)
-            .singleOrNull()
-            ?.id
     }
 
     suspend fun login(username: String, password: String): Boolean = dbQuery {
-        Users
-            .select { Users.username eq username }
+        UserTable
+            .select { UserTable.username eq username }
             .map(::fromResultRow)
             .singleOrNull()
             ?.password.equals(password)
     }
 
     suspend fun add(
-        userNoId: UserInfo
+        userBody: UserBody
     ): User? = dbQuery {
-        val insertStatement = Users.insert {
-            it[username] = userNoId.username
-            it[password] = userNoId.password
-            it[firstName] = userNoId.firstName
-            it[lastName] = userNoId.lastName
-            it[telephone] = userNoId.telephone
+        try {
+            UserTable.insert {
+                it[username] = userBody.username
+                it[password] = userBody.password
+                it[firstName] = userBody.firstName
+                it[lastName] = userBody.lastName
+                it[telephone] = userBody.telephone
+            }.resultedValues?.singleOrNull()?.let(::fromResultRow)
+        } catch (e: Exception) {
+            null
         }
-        insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
 
     suspend fun edit(
-        userNoId: UserInfo
+        userBody: UserBody
     ): Boolean = dbQuery {
-        Users.update({ Users.username eq userNoId.username }) {
-            it[username] = userNoId.username
-            it[password] = userNoId.password
-            it[firstName] = userNoId.firstName
-            it[lastName] = userNoId.lastName
-            it[telephone] = userNoId.telephone
-        } > 0
+        try {
+            UserTable.update({ UserTable.username eq userBody.username }) {
+                it[username] = userBody.username
+                it[password] = userBody.password
+                it[firstName] = userBody.firstName
+                it[lastName] = userBody.lastName
+                it[telephone] = userBody.telephone
+            } > 0
+        } catch (e: Exception) {
+            false
+        }
     }
 
     suspend fun delete(username: String): Boolean = dbQuery {
-        Users.deleteWhere { Users.username eq username } > 0
+        try {
+            UserTable.deleteWhere { UserTable.username eq username } > 0
+        } catch (e: Exception) {
+            false
+        }
     }
 }
 
@@ -81,12 +84,48 @@ val userDao: UserDao = UserDao().apply {
     runBlocking {
         if (getAll().isEmpty()) {
             add(
-                UserInfo(
+                UserBody(
                     "0Pinky0",
                     "005135",
                     "佳乐",
                     "王",
                     "18853187736"
+                )
+            )
+            add(
+                UserBody(
+                    "Dovish",
+                    "005135",
+                    "天浩",
+                    "李",
+                    "13583167770"
+                )
+            )
+            add(
+                UserBody(
+                    "Doggy",
+                    "123456",
+                    "晨",
+                    "王",
+                    "15513578420"
+                )
+            )
+            add(
+                UserBody(
+                    "Qtl",
+                    "123456",
+                    "天乐",
+                    "邱",
+                    "13753105441"
+                )
+            )
+            add(
+                UserBody(
+                    "华胥兜率梦曾游",
+                    "005136",
+                    "欣阳",
+                    "孙",
+                    "13583167770"
                 )
             )
         }

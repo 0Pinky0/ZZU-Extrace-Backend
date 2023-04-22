@@ -11,7 +11,7 @@ data class User(
     val telephone: String,
 )
 
-data class UserInfo(
+data class UserBody(
     val username: String,
     val password: String,
     val firstName: String,
@@ -19,7 +19,7 @@ data class UserInfo(
     val telephone: String,
 )
 
-object Users : Table() {
+object UserTable : Table() {
     val id = integer("id").autoIncrement()
     // 用户名，登录用
     val username = varchar("username", 32).uniqueIndex()

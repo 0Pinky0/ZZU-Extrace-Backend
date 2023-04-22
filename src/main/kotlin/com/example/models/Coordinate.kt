@@ -7,7 +7,7 @@ data class Coordinate(
     val y: Float,
 )
 
-object Coordinates : Table() {
+object CoordinateTable : Table() {
     // 用户标识符
     val id = integer("id").autoIncrement()
     val x = float("x")

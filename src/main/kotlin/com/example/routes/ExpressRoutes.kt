@@ -2,7 +2,7 @@ package com.example.routes
 
 import com.example.dao.expressDao
 import com.example.models.Express
-import com.example.models.ExpressInfo
+import com.example.models.ExpressBody
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -28,7 +28,7 @@ private fun Route.getAllExpresses() {
 
 private fun Route.addExpress() {
     post("add") {
-        val info = call.receive<ExpressInfo>()
+        val info = call.receive<ExpressBody>()
         val item = expressDao.add(info)
         call.respond(mapOf("OK" to (item == null)))
     }

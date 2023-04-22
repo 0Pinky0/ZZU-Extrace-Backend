@@ -1,6 +1,5 @@
 package com.example.models
 
-import com.example.models.TransitNodes.autoIncrement
 import org.jetbrains.exposed.sql.Table
 
 data class Location(
@@ -8,7 +7,7 @@ data class Location(
     val name: String,
 )
 
-object Locations : Table() {
+object LocationTable : Table() {
     // 快件
     val id = integer("id").autoIncrement()
     val name = varchar("name", 64)

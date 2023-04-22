@@ -2,19 +2,19 @@ package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
 import com.example.models.PackageContent
-import com.example.models.PackageContents
+import com.example.models.PackageContentTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class PackageContentDao {
     private fun fromResultRow(row: ResultRow) = PackageContent(
-        packageId = row[PackageContents.packageId],
-        expressId = row[PackageContents.expressId],
+        packageId = row[PackageContentTable.packageId],
+        expressId = row[PackageContentTable.expressId],
     )
 
     suspend fun getAll(): List<PackageContent> = dbQuery {
-        PackageContents
+        PackageContentTable
             .selectAll()
             .map(::fromResultRow)
     }
@@ -23,10 +23,10 @@ class PackageContentDao {
         packageId: Int,
         expressId: Int,
     ): PackageContent? = dbQuery {
-        PackageContents
+        PackageContentTable
             .select {
-                (PackageContents.packageId eq packageId) and
-                        (PackageContents.expressId eq expressId)
+                (PackageContentTable.packageId eq packageId) and
+                        (PackageContentTable.expressId eq expressId)
             }
             .map(::fromResultRow)
             .singleOrNull()
@@ -36,9 +36,9 @@ class PackageContentDao {
         packageId: Int,
         expressId: Int,
     ): PackageContent? = dbQuery {
-        val insertStatement = PackageContents.insert {
-            it[PackageContents.packageId] = packageId
-            it[PackageContents.expressId] = expressId
+        val insertStatement = PackageContentTable.insert {
+            it[PackageContentTable.packageId] = packageId
+            it[PackageContentTable.expressId] = expressId
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
@@ -47,9 +47,9 @@ class PackageContentDao {
         packageId: Int,
         expressId: Int,
     ): Boolean = dbQuery {
-        PackageContents.deleteWhere {
-            (PackageContents.packageId eq packageId) and
-                    (PackageContents.expressId eq expressId)
+        PackageContentTable.deleteWhere {
+            (PackageContentTable.packageId eq packageId) and
+                    (PackageContentTable.expressId eq expressId)
         } > 0
     }
 }

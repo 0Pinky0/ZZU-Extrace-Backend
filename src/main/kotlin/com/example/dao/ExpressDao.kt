@@ -8,31 +8,31 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class ExpressDao {
     private fun fromResultRow(row: ResultRow) = Express(
-        id = row[Expresses.id],
-        content = row[Expresses.content],
-        senderId = row[Expresses.senderId],
-        receiverId = row[Expresses.receiverId],
+        id = row[ExpressTable.id],
+        content = row[ExpressTable.content],
+        senderId = row[ExpressTable.senderId],
+        receiverId = row[ExpressTable.receiverId],
     )
 
     suspend fun getAll(): List<Express> = dbQuery {
-        Expresses
+        ExpressTable
             .selectAll()
             .map(::fromResultRow)
     }
 
     suspend fun get(id: Int): Express? = dbQuery {
-        Expresses
-            .select { Expresses.id eq id }
+        ExpressTable
+            .select { ExpressTable.id eq id }
             .map(::fromResultRow)
             .singleOrNull()
     }
 
     suspend fun add(
-        express: ExpressInfo
+        express: ExpressBody
     ): Express? = dbQuery {
         // 发送和接收方不可是同一人
         assert(express.senderId != express.receiverId)
-        val insertStatement = Expresses.insert {
+        val insertStatement = ExpressTable.insert {
             it[content] = express.content
             it[senderId] = express.senderId
             it[receiverId] = express.receiverId
@@ -43,7 +43,7 @@ class ExpressDao {
     suspend fun edit(
         express: Express
     ): Boolean = dbQuery {
-        Expresses.update({ Expresses.id eq express.id }) {
+        ExpressTable.update({ ExpressTable.id eq express.id }) {
             it[content] = express.content
             it[senderId] = express.senderId
             it[receiverId] = express.receiverId
@@ -51,12 +51,12 @@ class ExpressDao {
     }
 
     suspend fun delete(id: Int): Boolean = dbQuery {
-        Expresses.deleteWhere { Expresses.id eq id } > 0
+        ExpressTable.deleteWhere { ExpressTable.id eq id } > 0
     }
 
     suspend fun getContent(packageId: Int): List<Express> = dbQuery {
-        ((Expresses innerJoin PackageContents) innerJoin Packages)
-            .select(Packages.id eq packageId)
+        ((ExpressTable innerJoin PackageContentTable) innerJoin PackageTable)
+            .select(PackageTable.id eq packageId)
             .map(::fromResultRow)
     }
 }
@@ -64,15 +64,15 @@ class ExpressDao {
 val expressDao: ExpressDao = ExpressDao().apply {
     runBlocking {
         if (getAll().isEmpty()) {
-            add(ExpressInfo("送天浩", 1, 2))
-            add(ExpressInfo("济钢诗社", 1, 3))
-            add(ExpressInfo("马龙论", 3, 1))
-            add(ExpressInfo("鸽子圆顶笼", 3, 2))
-            add(ExpressInfo("黑夜使者", 1, 4))
-            add(ExpressInfo("灵魂莲华", 1, 4))
-            add(ExpressInfo("雨世界", 1, 2))
-            add(ExpressInfo("雨世界", 1, 3))
-            add(ExpressInfo("雨世界", 1, 4))
+            add(ExpressBody("送天浩", 1, 2))
+            add(ExpressBody("济钢诗社", 1, 3))
+            add(ExpressBody("马龙论", 3, 1))
+            add(ExpressBody("鸽子圆顶笼", 3, 2))
+            add(ExpressBody("黑夜使者", 1, 4))
+            add(ExpressBody("灵魂莲华", 1, 4))
+            add(ExpressBody("雨世界", 1, 2))
+            add(ExpressBody("雨世界", 1, 3))
+            add(ExpressBody("雨世界", 1, 4))
         }
     }
 }

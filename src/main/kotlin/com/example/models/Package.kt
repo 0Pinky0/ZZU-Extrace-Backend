@@ -9,19 +9,19 @@ data class Package(
     val endId: Int,
 )
 
-data class PackageInfo(
+data class PackageBody(
     val content: String,
     val startId: Int,
     val endId: Int,
 )
 
-object Packages : Table() {
+object PackageTable : Table() {
     // 包裹
     val id = integer("id").autoIncrement()
     val content = varchar("content", 64)
 
-    val startId = integer("ori_node_id").references(TransitNodes.id)
-    val endId = integer("dst_node_id").references(TransitNodes.id)
+    val startId = integer("ori_node_id").references(TransitNodeTable.id)
+    val endId = integer("dst_node_id").references(TransitNodeTable.id)
 
     override val primaryKey = PrimaryKey(id)
 }

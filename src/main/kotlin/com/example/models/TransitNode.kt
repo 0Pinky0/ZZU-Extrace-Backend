@@ -7,7 +7,7 @@ data class TransitNode(
     val name: String,
 )
 
-object TransitNodes : Table() {
+object TransitNodeTable : Table() {
     // 转运节点
     val id = integer("id").autoIncrement()
     val name = varchar("name", 64)

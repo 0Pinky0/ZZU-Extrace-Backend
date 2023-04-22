@@ -8,3 +8,15 @@ Content-Type: application/json
   "lastName": "李",
   "telephone": "13583167770"
 }
+
+###
+POST http://124.71.1.201:80/user/add
+Content-Type: application/json
+
+{
+  "username": "Future",
+  "password": "005135",
+  "firstName": "晓瑞",
+  "lastName": "吴",
+  "telephone": "13583167770"
+}
