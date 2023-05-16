@@ -8,12 +8,16 @@ data class Express(
     val content: String,
     val senderId: Int,
     val receiverId: Int,
+    val srcId: Int,
+    val dstId: Int,
 )
 
 data class ExpressBody(
     val content: String,
     val senderId: Int,
     val receiverId: Int,
+    val srcId: Int,
+    val dstId: Int,
 )
 
 object ExpressTable : Table() {
@@ -23,6 +27,9 @@ object ExpressTable : Table() {
 
     val senderId = integer("sender_id").references(UserTable.id)
     val receiverId = integer("receiver_id").references(UserTable.id)
+
+    val srcId = integer("src_loc_id").references(LocationTable.id)
+    val dstId = integer("dst_loc_id").references(LocationTable.id)
 
     override val primaryKey = PrimaryKey(id)
 }

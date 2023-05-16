@@ -12,6 +12,8 @@ class ExpressDao {
         content = row[ExpressTable.content],
         senderId = row[ExpressTable.senderId],
         receiverId = row[ExpressTable.receiverId],
+        srcId = row[ExpressTable.srcId],
+        dstId = row[ExpressTable.dstId],
     )
 
     suspend fun getAll(): List<Express> = dbQuery {
@@ -36,6 +38,8 @@ class ExpressDao {
             it[content] = express.content
             it[senderId] = express.senderId
             it[receiverId] = express.receiverId
+            it[srcId] = express.srcId
+            it[dstId] = express.dstId
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
@@ -47,6 +51,8 @@ class ExpressDao {
             it[content] = express.content
             it[senderId] = express.senderId
             it[receiverId] = express.receiverId
+            it[srcId] = srcId
+            it[dstId] = express.dstId
         } > 0
     }
 
@@ -64,15 +70,15 @@ class ExpressDao {
 val expressDao: ExpressDao = ExpressDao().apply {
     runBlocking {
         if (getAll().isEmpty()) {
-            add(ExpressBody("送天浩", 1, 2))
-            add(ExpressBody("济钢诗社", 1, 3))
-            add(ExpressBody("马龙论", 3, 1))
-            add(ExpressBody("鸽子圆顶笼", 3, 2))
-            add(ExpressBody("黑夜使者", 1, 4))
-            add(ExpressBody("灵魂莲华", 1, 4))
-            add(ExpressBody("雨世界", 1, 2))
-            add(ExpressBody("雨世界", 1, 3))
-            add(ExpressBody("雨世界", 1, 4))
+            add(ExpressBody("送天浩", 1, 2, 1, 3))
+            add(ExpressBody("济钢诗社", 1, 3, 1, 6))
+            add(ExpressBody("马龙论", 3, 1, 3, 1))
+            add(ExpressBody("鸽子圆顶笼", 3, 2, 3, 2))
+            add(ExpressBody("黑夜使者", 1, 4, 1, 4))
+            add(ExpressBody("灵魂莲华", 1, 4, 1, 4))
+            add(ExpressBody("雨世界", 1, 2, 1, 3))
+            add(ExpressBody("雨世界", 1, 3, 1, 6))
+            add(ExpressBody("雨世界", 1, 4, 1, 8))
         }
     }
 }

@@ -14,6 +14,7 @@ fun Route.userRouting() {
         getAllUsers()
         addUser()
         getUser()
+        getUserByName()
         editUser()
         deleteUser()
         login()
@@ -36,7 +37,7 @@ private fun Route.addUser() {
 
 private fun Route.getUser() {
     get("get/{id}") {
-        val id = call.parameters.getOrFail<Int>("username")
+        val id = call.parameters.getOrFail<Int>("id")
         val item = userDao.get(id)
         if (item != null)
             call.respond(item)
