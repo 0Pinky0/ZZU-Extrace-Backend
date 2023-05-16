@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 坐标
 data class Coordinate(
     val x: Float,
     val y: Float,

@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 转运节点（网点）
 data class TransitNode(
     val id: Int,
     val name: String,

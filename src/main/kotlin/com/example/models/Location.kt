@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 地区（省县等）
 data class Location(
     val id: Int,
     val name: String,

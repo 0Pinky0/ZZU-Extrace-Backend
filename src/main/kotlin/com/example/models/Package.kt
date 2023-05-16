@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 包裹（运单）
 data class Package(
     val id: Int,
     val content: String,

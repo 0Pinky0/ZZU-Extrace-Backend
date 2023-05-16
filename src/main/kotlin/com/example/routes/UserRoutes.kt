@@ -35,9 +35,27 @@ private fun Route.addUser() {
 }
 
 private fun Route.getUser() {
-    get("get/{username}") {
+    get("get/{id}") {
+        val id = call.parameters.getOrFail<Int>("username")
+        val item = userDao.get(id)
+        if (item != null)
+            call.respond(item)
+        else
+            call.respond(User(
+                -1,
+                "",
+                "",
+                "",
+                "",
+                "",
+            ))
+    }
+}
+
+private fun Route.getUserByName() {
+    get("getname/{username}") {
         val username = call.parameters.getOrFail<String>("username")
-        val item = userDao.get(username)
+        val item = userDao.getByName(username)
         if (item != null)
             call.respond(item)
         else

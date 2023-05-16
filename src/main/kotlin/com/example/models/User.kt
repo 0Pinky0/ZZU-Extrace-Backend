@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 用户
 data class User(
     val id: Int,
     val username: String,

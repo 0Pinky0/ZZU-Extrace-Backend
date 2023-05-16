@@ -24,7 +24,14 @@ class UserDao {
             .map(::fromResultRow)
     }
 
-    suspend fun get(username: String): User? = dbQuery {
+    suspend fun get(id: Int): User? = dbQuery {
+        UserTable
+            .select { UserTable.id eq id }
+            .map(::fromResultRow)
+            .singleOrNull()
+    }
+
+    suspend fun getByName(username: String): User? = dbQuery {
         UserTable
             .select { UserTable.username eq username }
             .map(::fromResultRow)

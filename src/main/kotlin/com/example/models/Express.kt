@@ -2,6 +2,7 @@ package com.example.models
 
 import org.jetbrains.exposed.sql.Table
 
+// 快件
 data class Express(
     val id: Int,
     val content: String,
