@@ -1,8 +1,11 @@
 package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
-import com.example.models.PackageContent
+import com.example.entity.pkg_ctn.PackageContent
+import com.example.entity.trace.Trace
 import com.example.models.PackageContentTable
+import com.example.models.PackageTable
+import com.example.models.TraceTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -43,6 +46,16 @@ class PackageContentDao {
         insertStatement.resultedValues?.singleOrNull()?.let(::fromResultRow)
     }
 
+    suspend fun addBatch(
+        batch: List<PackageContent>
+    ): Boolean = dbQuery {
+        val insertStatement = PackageContentTable.batchInsert(batch) { each ->
+            this[PackageContentTable.packageId] = each.packageId
+            this[PackageContentTable.expressId] = each.expressId
+        }
+        insertStatement.isNotEmpty()
+    }
+
     suspend fun delete(
         packageId: Int,
         expressId: Int,
@@ -59,13 +72,7 @@ val packageContentDao: PackageContentDao = PackageContentDao().apply {
         if (getAll().isEmpty()) {
             add(1, 1)
             add(1, 2)
-            add(2, 3)
-            add(2, 4)
-            add(3, 5)
-            add(3, 6)
-            add(4, 7)
-            add(4, 8)
-            add(4, 9)
+            add(2, 1)
         }
     }
 }

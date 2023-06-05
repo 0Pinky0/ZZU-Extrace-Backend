@@ -1,8 +1,8 @@
 package com.example.dao
 
 import com.example.dao.DatabaseFactory.dbQuery
-import com.example.models.User
-import com.example.models.UserBody
+import com.example.entity.user.User
+import com.example.entity.user.UserBody
 import com.example.models.UserTable
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
@@ -10,11 +10,9 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class UserDao {
     private fun fromResultRow(row: ResultRow) = User(
-        id = row[UserTable.id],
+        id = row[UserTable.id].value,
         username = row[UserTable.username],
         password = row[UserTable.password],
-        firstName = row[UserTable.firstName],
-        lastName = row[UserTable.lastName],
         telephone = row[UserTable.telephone],
     )
 
@@ -31,19 +29,11 @@ class UserDao {
             .singleOrNull()
     }
 
-    suspend fun getByName(username: String): User? = dbQuery {
+    suspend fun getByPhone(telephone: String): User? = dbQuery {
         UserTable
-            .select { UserTable.username eq username }
+            .select { UserTable.telephone eq telephone }
             .map(::fromResultRow)
             .singleOrNull()
-    }
-
-    suspend fun login(username: String, password: String): Boolean = dbQuery {
-        UserTable
-            .select { UserTable.username eq username }
-            .map(::fromResultRow)
-            .singleOrNull()
-            ?.password.equals(password)
     }
 
     suspend fun add(
@@ -53,8 +43,6 @@ class UserDao {
             UserTable.insert {
                 it[username] = userBody.username
                 it[password] = userBody.password
-                it[firstName] = userBody.firstName
-                it[lastName] = userBody.lastName
                 it[telephone] = userBody.telephone
             }.resultedValues?.singleOrNull()?.let(::fromResultRow)
         } catch (e: Exception) {
@@ -66,11 +54,9 @@ class UserDao {
         userBody: UserBody
     ): Boolean = dbQuery {
         try {
-            UserTable.update({ UserTable.username eq userBody.username }) {
+            UserTable.update({ UserTable.password eq userBody.password }) {
                 it[username] = userBody.username
                 it[password] = userBody.password
-                it[firstName] = userBody.firstName
-                it[lastName] = userBody.lastName
                 it[telephone] = userBody.telephone
             } > 0
         } catch (e: Exception) {
@@ -92,46 +78,36 @@ val userDao: UserDao = UserDao().apply {
         if (getAll().isEmpty()) {
             add(
                 UserBody(
-                    "0Pinky0",
+                    "王佳乐",
                     "005135",
-                    "佳乐",
-                    "王",
                     "18853187736"
                 )
             )
             add(
                 UserBody(
-                    "Dovish",
+                    "李天浩",
                     "005135",
-                    "天浩",
-                    "李",
-                    "13583167770"
+                    "13583167770",
                 )
             )
             add(
                 UserBody(
-                    "Doggy",
+                    "王晨",
                     "123456",
-                    "晨",
-                    "王",
                     "15513578420"
                 )
             )
             add(
                 UserBody(
-                    "Qtl",
+                    "邱天乐",
                     "123456",
-                    "天乐",
-                    "邱",
                     "13753105441"
                 )
             )
             add(
                 UserBody(
-                    "华胥兜率梦曾游",
+                    "孙欣阳",
                     "005136",
-                    "欣阳",
-                    "孙",
                     "13583167770"
                 )
             )

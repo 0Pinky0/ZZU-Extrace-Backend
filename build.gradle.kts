@@ -20,7 +20,11 @@ application {
 }
 
 repositories {
-    mavenCentral()
+//    mavenCentral()
+    maven("https://maven.aliyun.com/repository/public/")
+    maven("https://maven.aliyun.com/repository/spring/")
+    maven("https://maven.aliyun.com/repository/google/")
+    maven("https://maven.aliyun.com/repository/gradle-plugin")
     maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
 }
 
@@ -38,6 +42,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("mysql:mysql-connector-java:$mysql_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 

@@ -16,17 +16,19 @@ object DatabaseFactory {
         val database = Database.connect(jdbcURL, driverClassName, user, password)
         transaction(database) {
             SchemaUtils.create(UserTable)
-            userDao
-            SchemaUtils.create(LocationTable)
-            locationDao
-            SchemaUtils.create(TransitNodeTable)
-            transitNodeDao
+            SchemaUtils.create(NodeTable)
             SchemaUtils.create(ExpressTable)
-            expressDao
             SchemaUtils.create(PackageTable)
-            packageDao
             SchemaUtils.create(PackageContentTable)
+            SchemaUtils.create(TraceTable)
+            SchemaUtils.create(HistoryTable)
+            userDao
+            nodeDao
+            expressDao
+            packageDao
             packageContentDao
+            traceDao
+            historyDao
             return@transaction
         }
     }
